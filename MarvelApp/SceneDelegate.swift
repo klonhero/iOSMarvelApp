@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  MarvelApp
-//
-//  Created by effective_macbook_pro on 20.02.2023.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {

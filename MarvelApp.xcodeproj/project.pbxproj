@@ -18,8 +18,9 @@
 		AD37543029A39A970081B177 /* MarvelAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37542F29A39A970081B177 /* MarvelAppTests.swift */; };
 		AD37543A29A39A970081B177 /* MarvelAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37543929A39A970081B177 /* MarvelAppUITests.swift */; };
 		AD37543C29A39A970081B177 /* MarvelAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37543B29A39A970081B177 /* MarvelAppUITestsLaunchTests.swift */; };
-		AD5B6EDA29A50A29005B0C6C /* HeroesCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B6ED929A50A29005B0C6C /* HeroesCardsView.swift */; };
 		AD5EA00829A560AC0033A503 /* MyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5EA00729A560AC0033A503 /* MyCell.swift */; };
+		AD5EA00A29AC8C950033A503 /* HeroData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5EA00929AC8C950033A503 /* HeroData.swift */; };
+		AD5EA00E29AD42150033A503 /* PathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5EA00D29AD42150033A503 /* PathView.swift */; };
 		CA7004ABCE93D9090970795E /* Pods_MarvelAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E6C5312B6EA2F0A45BEE376 /* Pods_MarvelAppTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -59,8 +60,9 @@
 		AD37543529A39A970081B177 /* MarvelAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarvelAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD37543929A39A970081B177 /* MarvelAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAppUITests.swift; sourceTree = "<group>"; };
 		AD37543B29A39A970081B177 /* MarvelAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		AD5B6ED929A50A29005B0C6C /* HeroesCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroesCardsView.swift; sourceTree = "<group>"; };
 		AD5EA00729A560AC0033A503 /* MyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCell.swift; sourceTree = "<group>"; };
+		AD5EA00929AC8C950033A503 /* HeroData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroData.swift; sourceTree = "<group>"; };
+		AD5EA00D29AD42150033A503 /* PathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathView.swift; sourceTree = "<group>"; };
 		BB7ABF690408B08F32139BA0 /* Pods_MarvelApp_MarvelAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MarvelApp_MarvelAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D658C792CA6F53A8DFB61347 /* Pods-MarvelApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarvelApp.debug.xcconfig"; path = "Target Support Files/Pods-MarvelApp/Pods-MarvelApp.debug.xcconfig"; sourceTree = "<group>"; };
 		F8612523AC76E5A843A80D87 /* Pods_MarvelApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MarvelApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -150,8 +152,9 @@
 				AD37542129A39A960081B177 /* Assets.xcassets */,
 				AD37542329A39A960081B177 /* LaunchScreen.storyboard */,
 				AD37542629A39A960081B177 /* Info.plist */,
-				AD5B6ED929A50A29005B0C6C /* HeroesCardsView.swift */,
 				AD5EA00729A560AC0033A503 /* MyCell.swift */,
+				AD5EA00929AC8C950033A503 /* HeroData.swift */,
+				AD5EA00D29AD42150033A503 /* PathView.swift */,
 			);
 			path = MarvelApp;
 			sourceTree = "<group>";
@@ -414,8 +417,9 @@
 			files = (
 				AD37541D29A39A940081B177 /* ViewController.swift in Sources */,
 				AD5EA00829A560AC0033A503 /* MyCell.swift in Sources */,
+				AD5EA00A29AC8C950033A503 /* HeroData.swift in Sources */,
+				AD5EA00E29AD42150033A503 /* PathView.swift in Sources */,
 				AD37541929A39A940081B177 /* AppDelegate.swift in Sources */,
-				AD5B6EDA29A50A29005B0C6C /* HeroesCardsView.swift in Sources */,
 				AD37541B29A39A940081B177 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
