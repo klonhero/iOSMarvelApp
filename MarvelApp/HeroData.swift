@@ -2,13 +2,14 @@
 import Foundation
 
 struct HeroData {
-    var asset: String
-    var name: String
-    var color: String
+    let asset: String
+    let name: String
+    let color: String
+    let description: String
 }
 
-let listHeroData: [HeroData] = [ HeroData(asset: "CaptainAmerica", name: "Captain America", color: "CaptainAmerica"),
-                     HeroData(asset: "IronMan", name: "Iron Man", color: "IronMan"),
-                     HeroData(asset: "Deadpool", name: "Deadpool", color: "Deadpool"),
-                     HeroData(asset: "DoctorStrange", name: "Doctor Strange", color: "DoctorStrange"),
-                     HeroData(asset: "Thor", name: "Thor", color: "Thor") ]
+let listHeroData: [HeroData] = [ HeroData(asset: "CaptainAmerica", name: "Captain America", color: "CaptainAmerica", description: "This is Captain America"),
+                     HeroData(asset: "IronMan", name: "Iron Man", color: "IronMan", description: "This is Iron Man"),
+                     HeroData(asset: "Deadpool", name: "Deadpool", color: "Deadpool", description: "This is Deadpool"),
+                     HeroData(asset: "DoctorStrange", name: "Doctor Strange", color: "DoctorStrange", description: "This is Doctor Strange"),
+                     HeroData(asset: "Thor", name: "Thor", color: "Thor", description: "This is Thor") ]

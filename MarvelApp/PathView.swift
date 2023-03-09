@@ -13,11 +13,12 @@ final class PathView: UIView {
         color.setFill()
         path.fill()
     }
+    
     override func draw(_ rect: CGRect) {
-        path.move(to: CGPoint(x: self.frame.minX, y: self.frame.maxY))
-        path.addLine(to: CGPoint(x: self.frame.maxX, y: self.frame.maxY))
-        path.addLine(to: CGPoint(x: self.frame.maxX, y: self.frame.midY))
-        path.addLine(to: CGPoint(x: self.frame.minX, y: self.frame.maxY))
+        path.move(to: CGPoint(x: UIScreen.main.bounds.minX, y: UIScreen.main.bounds.maxY))
+        path.addLine(to: CGPoint(x: UIScreen.main.bounds.maxX, y: UIScreen.main.bounds.maxY))
+        path.addLine(to: CGPoint(x: UIScreen.main.bounds.maxX, y: UIScreen.main.bounds.midY * 0.75))
+        path.addLine(to: CGPoint(x: UIScreen.main.bounds.minX, y: UIScreen.main.bounds.maxY))
         path.close()
         path.lineWidth = 3
         setupNewColor()

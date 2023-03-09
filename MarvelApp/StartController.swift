@@ -1,8 +1,8 @@
 import UIKit
 import CollectionViewPagingLayout
 
-class ViewController: UIViewController {
-    
+class StartController: UIViewController {
+
     private var lastCenterIndex = 0
     private var pathView: PathView = {
         let pathView = PathView()
@@ -11,7 +11,7 @@ class ViewController: UIViewController {
         pathView.color = UIColor(named: listHeroData[0].color)!
         return pathView
     }()
-    
+
     private var logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .clear
@@ -19,7 +19,6 @@ class ViewController: UIViewController {
         imageView.image = UIImage(named: "marvelLogo")
         return imageView
     }()
-    
     lazy var collectionView: UICollectionView = {
         let layout = CollectionViewPagingLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -43,7 +42,7 @@ class ViewController: UIViewController {
         label.backgroundColor = .clear
         return label
     }()
-    
+
     override func viewDidLoad() {
         super.loadView()
         view = UIView()
@@ -61,25 +60,25 @@ class ViewController: UIViewController {
         view.addSubview(label)
         view.addSubview(collectionView)
     }
-    
+
     private func setupPath() {
         NSLayoutConstraint.activate([
-            pathView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            pathView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            pathView.topAnchor.constraint(equalTo: view.topAnchor),
+            pathView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             pathView.leftAnchor.constraint(equalTo: view.leftAnchor),
             pathView.rightAnchor.constraint(equalTo: view.rightAnchor)
-            ])
+        ])
     }
-    
+
     private func setupMarvelLogo() {
         NSLayoutConstraint.activate([
             logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             logoImageView.heightAnchor.constraint(equalToConstant: 25),
             logoImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100),
             logoImageView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -100)
-            ])
+        ])
     }
-    
+
     private func setupUnderLogoText() {
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 20),
@@ -89,34 +88,38 @@ class ViewController: UIViewController {
         ])
     }
     //TODO: Убрать константные ширину и высоту заменить на левый и правый constraint
-    
+
     private func setupHeroesCollection() {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: label.bottomAnchor),
             collectionView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-            ])
+        ])
     }
 }
 
-extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension StartController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         listHeroData.count
     }
-        
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HeroCell.self), for: indexPath) as! HeroCell
-        
+
         let hero = listHeroData[indexPath.item]
         cell.setupCell(model: HeroCellModel(name: hero.name, image: UIImage(named: hero.asset)!))
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(indexPath.item)
+    }
+
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let centerIndex = findCenterIndex()
         pathView.color = UIColor(named: listHeroData[centerIndex].color)!
     }
-    
+
     private func findCenterIndex() -> Int {
         let center = self.view.convert(self.collectionView.center, to: self.collectionView)
         let index = collectionView.indexPathForItem(at: center)
