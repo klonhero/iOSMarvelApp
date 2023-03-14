@@ -3,7 +3,7 @@ import CollectionViewPagingLayout
 
 class StartViewController: UIViewController {
 
-    private var lastCenterIndex = 0
+    private var lastCenterIndex: Int = 0
     
     private var pathView: PathView = {
         let pathView = PathView()
@@ -92,8 +92,7 @@ class StartViewController: UIViewController {
             label.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
     }
-    //TODO: Убрать константные ширину и высоту заменить на левый и правый constraint
-
+    
     private func setupHeroesCollection() {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: label.bottomAnchor),
@@ -109,15 +108,16 @@ extension StartViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HeroCollectionViewCell.self), for: indexPath) as! HeroCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HeroCollectionViewCell.self), for: indexPath) as? HeroCollectionViewCell else {
+            return HeroCollectionViewCell()
+        }
 
         let hero = listHeroData[indexPath.item]
-        cell.setupCell(model: HeroCollectionViewCell.Model(name: hero.name, image: UIImage(named: hero.asset)!))
+        cell.setupCell(model: HeroCollectionViewCell.Model(name: hero.name, url: URL(string: hero.url)! ))
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath.item)
         let hero = listHeroData[indexPath.item]
         let image = UIImage(named: hero.asset)!
         let model = DescriptionViewController.Model(image: image, name: hero.name, description: hero.description)

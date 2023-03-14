@@ -1,13 +1,7 @@
-//
-//  DescriptionViewController.swift
-//  MarvelApp
-//
-//  Created by effective_macbook_pro on 09.03.2023.
-//
-
 import UIKit
 
 final class DescriptionViewController: UIViewController {
+    
     struct Model {
         let image: UIImage
         let name: String

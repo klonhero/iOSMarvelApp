@@ -4,13 +4,14 @@ import CollectionViewPagingLayout
 
 
 final class HeroCollectionViewCell: UICollectionViewCell {
+    
     struct Model {
         var name: String
-        var image: UIImage
+        var url: URL
     }
     
     func setupCell(model: Model) {
-        heroImageView.image = model.image
+        heroImageView.downloaded(from: model.url)
         label.text = model.name
     }
     
@@ -20,7 +21,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
         imageView.contentMode = .scaleToFill
         return imageView
     }()
-
+    
     private lazy var label: UILabel = {
         let textView = UILabel()
         textView.translatesAutoresizingMaskIntoConstraints = false

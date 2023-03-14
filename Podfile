@@ -4,7 +4,7 @@
 target 'MarvelApp' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-
   # Pods for MarvelApp
   pod 'CollectionViewPagingLayout'
+  pod 'Kingfisher', '~> 7.0'
 end
