@@ -15,6 +15,7 @@ final class PathView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
+        //TODO: use rect
         path.move(to: CGPoint(x: UIScreen.main.bounds.minX, y: UIScreen.main.bounds.maxY))
         path.addLine(to: CGPoint(x: UIScreen.main.bounds.maxX, y: UIScreen.main.bounds.maxY))
         path.addLine(to: CGPoint(x: UIScreen.main.bounds.maxX, y: UIScreen.main.bounds.midY * 0.75))

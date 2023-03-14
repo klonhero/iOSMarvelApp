@@ -1,14 +1,16 @@
 import UIKit
 import CollectionViewPagingLayout
 
-class StartController: UIViewController {
+class StartViewController: UIViewController {
 
     private var lastCenterIndex = 0
+    
     private var pathView: PathView = {
         let pathView = PathView()
         pathView.translatesAutoresizingMaskIntoConstraints = false
         pathView.backgroundColor = .clear
-        pathView.color = UIColor(named: listHeroData[0].color)!
+        let color = (UIImage(named: listHeroData[0].asset)?.averageColor!.withAlphaComponent(1))!
+        pathView.color = color.lighter(by: 25)!
         return pathView
     }()
 
@@ -19,13 +21,16 @@ class StartController: UIViewController {
         imageView.image = UIImage(named: "marvelLogo")
         return imageView
     }()
+    
+    private let descriptionViewController = DescriptionViewController()
+    
     lazy var collectionView: UICollectionView = {
         let layout = CollectionViewPagingLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(HeroCell.self, forCellWithReuseIdentifier: String(describing: HeroCell.self))
+        collectionView.register(HeroCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: HeroCollectionViewCell.self))
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -98,26 +103,32 @@ class StartController: UIViewController {
     }
 }
 
-extension StartController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension StartViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         listHeroData.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HeroCell.self), for: indexPath) as! HeroCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HeroCollectionViewCell.self), for: indexPath) as! HeroCollectionViewCell
 
         let hero = listHeroData[indexPath.item]
-        cell.setupCell(model: HeroCellModel(name: hero.name, image: UIImage(named: hero.asset)!))
+        cell.setupCell(model: HeroCollectionViewCell.Model(name: hero.name, image: UIImage(named: hero.asset)!))
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.item)
+        let hero = listHeroData[indexPath.item]
+        let image = UIImage(named: hero.asset)!
+        let model = DescriptionViewController.Model(image: image, name: hero.name, description: hero.description)
+        descriptionViewController.setup(model)
+        navigationController?.pushViewController(descriptionViewController, animated: true)
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let centerIndex = findCenterIndex()
-        pathView.color = UIColor(named: listHeroData[centerIndex].color)!
+        let color = (UIImage(named: listHeroData[centerIndex].asset)?.averageColor!.withAlphaComponent(1))!
+        pathView.color = color.lighter(by: 25)!
     }
 
     private func findCenterIndex() -> Int {

@@ -11,15 +11,17 @@
 		964800A9EA3211D7A0F6FA32 /* Pods_MarvelApp_MarvelAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB7ABF690408B08F32139BA0 /* Pods_MarvelApp_MarvelAppUITests.framework */; };
 		AD37541929A39A940081B177 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37541829A39A940081B177 /* AppDelegate.swift */; };
 		AD37541B29A39A940081B177 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37541A29A39A940081B177 /* SceneDelegate.swift */; };
-		AD37541D29A39A940081B177 /* StartController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37541C29A39A940081B177 /* StartController.swift */; };
+		AD37541D29A39A940081B177 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37541C29A39A940081B177 /* StartViewController.swift */; };
 		AD37542229A39A960081B177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD37542129A39A960081B177 /* Assets.xcassets */; };
 		AD37542529A39A960081B177 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD37542329A39A960081B177 /* LaunchScreen.storyboard */; };
 		AD37543029A39A970081B177 /* MarvelAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37542F29A39A970081B177 /* MarvelAppTests.swift */; };
 		AD37543A29A39A970081B177 /* MarvelAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37543929A39A970081B177 /* MarvelAppUITests.swift */; };
 		AD37543C29A39A970081B177 /* MarvelAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD37543B29A39A970081B177 /* MarvelAppUITestsLaunchTests.swift */; };
-		AD5EA00829A560AC0033A503 /* MyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5EA00729A560AC0033A503 /* MyCell.swift */; };
+		AD5EA00829A560AC0033A503 /* HeroCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5EA00729A560AC0033A503 /* HeroCollectionViewCell.swift */; };
 		AD5EA00A29AC8C950033A503 /* HeroData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5EA00929AC8C950033A503 /* HeroData.swift */; };
 		AD5EA00E29AD42150033A503 /* PathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5EA00D29AD42150033A503 /* PathView.swift */; };
+		AD5EA01029BA193C0033A503 /* DescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5EA00F29BA193C0033A503 /* DescriptionViewController.swift */; };
+		AD6FCEC229C048A000B41E1F /* AverageColorImageExtansion.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6FCEC129C048A000B41E1F /* AverageColorImageExtansion.swift */; };
 		CA7004ABCE93D9090970795E /* Pods_MarvelAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E6C5312B6EA2F0A45BEE376 /* Pods_MarvelAppTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,7 +51,7 @@
 		AD37541529A39A940081B177 /* MarvelApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MarvelApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD37541829A39A940081B177 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AD37541A29A39A940081B177 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		AD37541C29A39A940081B177 /* StartController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartController.swift; sourceTree = "<group>"; };
+		AD37541C29A39A940081B177 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		AD37542129A39A960081B177 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AD37542429A39A960081B177 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AD37542629A39A960081B177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -58,9 +60,11 @@
 		AD37543529A39A970081B177 /* MarvelAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarvelAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD37543929A39A970081B177 /* MarvelAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAppUITests.swift; sourceTree = "<group>"; };
 		AD37543B29A39A970081B177 /* MarvelAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		AD5EA00729A560AC0033A503 /* MyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCell.swift; sourceTree = "<group>"; };
+		AD5EA00729A560AC0033A503 /* HeroCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCollectionViewCell.swift; sourceTree = "<group>"; };
 		AD5EA00929AC8C950033A503 /* HeroData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroData.swift; sourceTree = "<group>"; };
 		AD5EA00D29AD42150033A503 /* PathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathView.swift; sourceTree = "<group>"; };
+		AD5EA00F29BA193C0033A503 /* DescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionViewController.swift; sourceTree = "<group>"; };
+		AD6FCEC129C048A000B41E1F /* AverageColorImageExtansion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AverageColorImageExtansion.swift; sourceTree = "<group>"; };
 		BB7ABF690408B08F32139BA0 /* Pods_MarvelApp_MarvelAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MarvelApp_MarvelAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D658C792CA6F53A8DFB61347 /* Pods-MarvelApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarvelApp.debug.xcconfig"; path = "Target Support Files/Pods-MarvelApp/Pods-MarvelApp.debug.xcconfig"; sourceTree = "<group>"; };
 		F8612523AC76E5A843A80D87 /* Pods_MarvelApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MarvelApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,13 +149,15 @@
 			children = (
 				AD37541829A39A940081B177 /* AppDelegate.swift */,
 				AD37541A29A39A940081B177 /* SceneDelegate.swift */,
-				AD37541C29A39A940081B177 /* StartController.swift */,
+				AD37541C29A39A940081B177 /* StartViewController.swift */,
 				AD37542129A39A960081B177 /* Assets.xcassets */,
 				AD37542329A39A960081B177 /* LaunchScreen.storyboard */,
 				AD37542629A39A960081B177 /* Info.plist */,
-				AD5EA00729A560AC0033A503 /* MyCell.swift */,
+				AD5EA00729A560AC0033A503 /* HeroCollectionViewCell.swift */,
 				AD5EA00929AC8C950033A503 /* HeroData.swift */,
 				AD5EA00D29AD42150033A503 /* PathView.swift */,
+				AD5EA00F29BA193C0033A503 /* DescriptionViewController.swift */,
+				AD6FCEC129C048A000B41E1F /* AverageColorImageExtansion.swift */,
 			);
 			path = MarvelApp;
 			sourceTree = "<group>";
@@ -411,8 +417,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD37541D29A39A940081B177 /* StartController.swift in Sources */,
-				AD5EA00829A560AC0033A503 /* MyCell.swift in Sources */,
+				AD37541D29A39A940081B177 /* StartViewController.swift in Sources */,
+				AD5EA01029BA193C0033A503 /* DescriptionViewController.swift in Sources */,
+				AD6FCEC229C048A000B41E1F /* AverageColorImageExtansion.swift in Sources */,
+				AD5EA00829A560AC0033A503 /* HeroCollectionViewCell.swift in Sources */,
 				AD5EA00A29AC8C950033A503 /* HeroData.swift in Sources */,
 				AD5EA00E29AD42150033A503 /* PathView.swift in Sources */,
 				AD37541929A39A940081B177 /* AppDelegate.swift in Sources */,

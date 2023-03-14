@@ -1,14 +1,15 @@
 import UIKit
 import CollectionViewPagingLayout
 
-struct HeroCellModel {
-    var name: String
-    var image: UIImage
-}
 
-final class HeroCell: UICollectionViewCell {
+
+final class HeroCollectionViewCell: UICollectionViewCell {
+    struct Model {
+        var name: String
+        var image: UIImage
+    }
     
-    func setupCell(model: HeroCellModel) {
+    func setupCell(model: Model) {
         heroImageView.image = model.image
         label.text = model.name
     }
@@ -71,7 +72,7 @@ final class HeroCell: UICollectionViewCell {
     
 }
 
-extension HeroCell: ScaleTransformView {
+extension HeroCollectionViewCell: ScaleTransformView {
     var scaleOptions: ScaleTransformViewOptions {
         .layout(.linear)
     }
