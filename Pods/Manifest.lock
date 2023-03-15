@@ -1,16 +1,20 @@
 PODS:
   - CollectionViewPagingLayout (1.1.0)
+  - Kingfisher (7.6.2)
 
 DEPENDENCIES:
   - CollectionViewPagingLayout
+  - Kingfisher (~> 7.0)
 
 SPEC REPOS:
   trunk:
     - CollectionViewPagingLayout
+    - Kingfisher
 
 SPEC CHECKSUMS:
   CollectionViewPagingLayout: 2f8d50683bae57ca88f47fa4ab0195c9079582cf
+  Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
 
-PODFILE CHECKSUM: 3d08c71100413f7add5d5f8637a6f5fee6ad10c0
+PODFILE CHECKSUM: 3263eb860442b9302caa9a28bbc6b9e60101f4e3
 
 COCOAPODS: 1.11.3
