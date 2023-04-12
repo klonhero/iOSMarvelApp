@@ -3,14 +3,22 @@ import CollectionViewPagingLayout
 
 final class HeroListViewController: UIViewController {
 
-    private var lastCenterIndex: Int = 0
+    private var lastCenterIndex: IndexPath? = nil
     
     private let viewModel = HeroListViewModel()
     
     private var listHeroData = [HeroData]()
     
-    private let pathView: PathView = {
-        let pathView = PathView()
+    private let loadingView: LoadingView = {
+        let loadingView = LoadingView()
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        loadingView.backgroundColor = .clear
+        loadingView.isUserInteractionEnabled = false
+        return loadingView
+    }()
+    
+    private let triangleView: TriangleView = {
+        let pathView = TriangleView()
         pathView.translatesAutoresizingMaskIntoConstraints = false
         pathView.backgroundColor = .clear
         return pathView
@@ -26,9 +34,14 @@ final class HeroListViewController: UIViewController {
     
     private let descriptionViewController = DescriptionViewController()
     
-    private lazy var collectionView: UICollectionView = {
+    private let collectionViewLayout: CollectionViewPagingLayout = {
         let layout = CollectionViewPagingLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        return layout
+    }()
+    
+    private lazy var collectionView: UICollectionView = {
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
@@ -53,34 +66,39 @@ final class HeroListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "BackgroundColor")
-        setupViewLayout()
-        setupPath()
-        setupMarvelLogo()
-        setupUnderLogoText()
-        setupHeroesCollection()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        viewModel.fetchListData(compleation: { [weak self] items in
+        viewModel.fetchHeroes(compleation: { [weak self] items in
             self?.listHeroData = items
             self?.collectionView.reloadData()
+            self?.collectionViewLayout.setCurrentPage(0)
+            self?.loadingView.stop()
         })
+        setupViewLayout()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadingView.start()
     }
 
     private func setupViewLayout() {
-        view.addSubview(pathView)
+        view.addSubview(triangleView)
         view.addSubview(logoImageView)
         view.addSubview(label)
         view.addSubview(collectionView)
+        view.addSubview(loadingView)
+        setupTriangle()
+        setupMarvelLogo()
+        setupLabel()
+        setupHeroesCollection()
+        setupLoadingView()
     }
 
-    private func setupPath() {
+    private func setupTriangle() {
         NSLayoutConstraint.activate([
-            pathView.topAnchor.constraint(equalTo: view.topAnchor),
-            pathView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            pathView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            pathView.rightAnchor.constraint(equalTo: view.rightAnchor)
+            triangleView.topAnchor.constraint(equalTo: view.topAnchor),
+            triangleView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            triangleView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            triangleView.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
     }
 
@@ -93,7 +111,7 @@ final class HeroListViewController: UIViewController {
         ])
     }
 
-    private func setupUnderLogoText() {
+    private func setupLabel() {
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 20),
             label.heightAnchor.constraint(equalToConstant: 75),
@@ -109,6 +127,15 @@ final class HeroListViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+    
+    private func setupLoadingView() {
+        NSLayoutConstraint.activate([
+            loadingView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            loadingView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            loadingView.rightAnchor.constraint(equalTo: view.rightAnchor)
+        ])
+    }
 }
 
 extension HeroListViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -120,31 +147,36 @@ extension HeroListViewController: UICollectionViewDataSource, UICollectionViewDe
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HeroCollectionViewCell.self), for: indexPath) as? HeroCollectionViewCell else {
             return HeroCollectionViewCell()
         }
-
         let hero = listHeroData[indexPath.item]
-        cell.setupCell(model: HeroCollectionViewCell.Model(name: hero.name, url: URL(string: hero.url)! ))
+        cell.setupCell(model: HeroCollectionViewCell.Model(name: hero.name, url: URL(string: hero.imageURL) ))
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let hero = listHeroData[indexPath.item]
-        let image = UIImage(named: hero.asset)!
-        let model = DescriptionViewController.Model(image: image, name: hero.name, description: hero.description)
+        let model = DescriptionViewController.Model(url: URL(string: hero.imageURL), name: hero.name, description: hero.description)
         descriptionViewController.setup(model)
         navigationController?.pushViewController(descriptionViewController, animated: true)
     }
-
+    
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let centerIndex = findCenterIndex()
-        let color = (UIImage(named: listHeroData[centerIndex].asset)?.averageColor!.withAlphaComponent(1))!
-        pathView.color = color.lighter(by: 25)!
+        guard findCenterIndex() == lastCenterIndex else {
+            return
+        }
+        lastCenterIndex = findCenterIndex()
+        guard let lastCenterIndex = lastCenterIndex else {
+            return
+        }
+        let cell = collectionView.cellForItem(at: lastCenterIndex) as? HeroCollectionViewCell
+        guard let cell = cell else {
+            return
+        }
+        triangleView.color = cell.imageAverageColor
     }
 
-    private func findCenterIndex() -> Int {
+    private func findCenterIndex() -> IndexPath? {
         let center = self.view.convert(self.collectionView.center, to: self.collectionView)
         let index = collectionView.indexPathForItem(at: center)
-        lastCenterIndex = index?.item ?? lastCenterIndex
-        return lastCenterIndex
+        return index
     }
-
 }

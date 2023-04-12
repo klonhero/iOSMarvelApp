@@ -3,7 +3,7 @@ import UIKit
 final class DescriptionViewController: UIViewController {
     
     struct Model {
-        let image: UIImage
+        let url: URL?
         let name: String
         let description: String
     }
@@ -19,6 +19,7 @@ final class DescriptionViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 30, weight: .bold)
+        label.textAlignment = .left
         return label
     }()
     
@@ -28,8 +29,7 @@ final class DescriptionViewController: UIViewController {
         textView.textColor = .white
         textView.backgroundColor = .clear
         textView.font = UIFont.systemFont(ofSize: 30, weight: .bold)
-        textView.contentInsetAdjustmentBehavior = .automatic
-        textView.textAlignment = NSTextAlignment.left
+        textView.textAlignment = .left
         textView.isEditable = false
         return textView
     }()
@@ -49,7 +49,7 @@ final class DescriptionViewController: UIViewController {
     func setup(_ model: Model) {
         nameLabel.text = model.name
         descriptionTextView.text = model.description
-        imageView.image = model.image
+        imageView.fetch(from: model.url)
     }
     
     private func setupImageView() {

@@ -1,6 +1,7 @@
 import UIKit
 
-final class PathView: UIView {
+final class TriangleView: UIView {
+    
     private let path = UIBezierPath()
     var color: UIColor = .clear {
         didSet {
