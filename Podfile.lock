@@ -2,23 +2,33 @@ PODS:
   - Alamofire (5.6.4)
   - CollectionViewPagingLayout (1.1.0)
   - Kingfisher (7.6.2)
+  - Realm (10.33.0):
+    - Realm/Headers (= 10.33.0)
+  - Realm/Headers (10.33.0)
+  - RealmSwift (10.33.0):
+    - Realm (= 10.33.0)
 
 DEPENDENCIES:
   - Alamofire
   - CollectionViewPagingLayout
   - Kingfisher (~> 7.0)
+  - RealmSwift (= 10.33.0)
 
 SPEC REPOS:
   trunk:
     - Alamofire
     - CollectionViewPagingLayout
     - Kingfisher
+    - Realm
+    - RealmSwift
 
 SPEC CHECKSUMS:
   Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
   CollectionViewPagingLayout: 2f8d50683bae57ca88f47fa4ab0195c9079582cf
   Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
+  Realm: d4f810e161fa2c2c589b9860b6eb09238deacd73
+  RealmSwift: cef9946f09f2333a8f2ac8bac4f8de52fb9f5ac3
 
-PODFILE CHECKSUM: c39e3c652a9601c0ceecc2fef621aa0a05698fe1
+PODFILE CHECKSUM: 191c7b0b52fab71df6b2f53afcf16905d6f9a14c
 
 COCOAPODS: 1.11.3

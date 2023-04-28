@@ -11,6 +11,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         let startController = HeroListViewController()
         let navigationController = UINavigationController(rootViewController: startController)
+        navigationController.navigationBar.backgroundColor = .clear
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
