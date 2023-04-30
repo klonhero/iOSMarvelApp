@@ -7,11 +7,18 @@ final class DescriptionViewController: UIViewController {
         let name: String
         let description: String
     }
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleToFill
         return imageView
+    }()
+    
+    private var gradientView: GradientView = {
+        let gradientView = GradientView(gradientStartColor: UIColor.black.withAlphaComponent(0), gradientEndColor: UIColor.black.withAlphaComponent(0.5))
+        gradientView.translatesAutoresizingMaskIntoConstraints = false
+        return gradientView
     }()
     
     private let nameLabel: UILabel = {
@@ -32,12 +39,6 @@ final class DescriptionViewController: UIViewController {
         textView.textAlignment = .left
         textView.isEditable = false
         return textView
-    }()
-    
-    private var gradientView: GradientView = {
-        let gradientView = GradientView(gradientStartColor: UIColor.black.withAlphaComponent(0), gradientEndColor: UIColor.black.withAlphaComponent(0.5))
-        gradientView.translatesAutoresizingMaskIntoConstraints = false
-        return gradientView
     }()
     
     
@@ -67,10 +68,10 @@ final class DescriptionViewController: UIViewController {
     
     private func setupImageView() {
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            imageView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-            imageView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor)
+            imageView.topAnchor.constraint(equalTo: view.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            imageView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            imageView.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
     }
     

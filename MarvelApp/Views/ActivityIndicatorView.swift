@@ -17,6 +17,7 @@ final class ActivityIndicatorView: UIView {
     
     private lazy var visualEffectView: UIVisualEffectView = {
         let visualEffectView = UIVisualEffectView()
+        visualEffectView.translatesAutoresizingMaskIntoConstraints = false
         visualEffectView.effect = self.blurEffect
         return visualEffectView
     }()
@@ -54,14 +55,14 @@ final class ActivityIndicatorView: UIView {
     
     private func setupActivityIndiactor() {
         NSLayoutConstraint.activate([
-            activityIndicator.topAnchor.constraint(equalTo: self.topAnchor),
-            activityIndicator.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            activityIndicator.leftAnchor.constraint(equalTo: self.leftAnchor),
-            activityIndicator.rightAnchor.constraint(equalTo: self.rightAnchor)
+            activityIndicator.centerXAnchor.constraint(equalTo: visualEffectView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: visualEffectView.centerYAnchor),
+            activityIndicator.heightAnchor.constraint(equalTo: visualEffectView.heightAnchor),
+            activityIndicator.widthAnchor.constraint(equalTo: visualEffectView.widthAnchor)
         ])
     }
     
-    init() {
+    override init(frame: CGRect) {
         super.init(frame: .zero)
         setLayout()
     }

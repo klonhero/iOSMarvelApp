@@ -1,13 +1,19 @@
 import UIKit
 import CollectionViewPagingLayout
 
-final class HeroListViewController: UIViewController {
-
+final class CharactersCollectionViewController: UIViewController {
+    
+    struct Model {
+        let name: String
+        let description: String
+        let imageURL: String
+    }
+    
     private var lastCenterIndexPath: IndexPath? = nil
     
-    private let viewModel = HeroListViewModel()
+    private let viewModel = CharactersCollectionViewModel()
     
-    private var heroesData = [HeroData]()
+    private var heroesData = [Model]()
     
     private var isLoadingMore = false
     
@@ -46,7 +52,7 @@ final class HeroListViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(HeroCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: HeroCollectionViewCell.self))
+        collectionView.register(CharacterCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: CharacterCollectionViewCell.self))
         collectionView.backgroundColor = .clear
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -142,17 +148,17 @@ final class HeroListViewController: UIViewController {
     }
 }
 
-extension HeroListViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension CharactersCollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         heroesData.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HeroCollectionViewCell.self), for: indexPath) as? HeroCollectionViewCell else {
-            return HeroCollectionViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: CharacterCollectionViewCell.self), for: indexPath) as? CharacterCollectionViewCell else {
+            return CharacterCollectionViewCell()
         }
         let hero = heroesData[indexPath.item]
-        cell.setupCell(model: HeroCollectionViewCell.Model(name: hero.name, url: URL(string: hero.imageURL)))
+        cell.setupCell(model: CharacterCollectionViewCell.Model(name: hero.name, url: URL(string: hero.imageURL)))
         return cell
     }
     
@@ -172,7 +178,7 @@ extension HeroListViewController: UICollectionViewDataSource, UICollectionViewDe
         guard let lastCenterIndex = lastCenterIndexPath else {
             return
         }
-        let cell = collectionView.cellForItem(at: lastCenterIndex) as? HeroCollectionViewCell
+        let cell = collectionView.cellForItem(at: lastCenterIndex) as? CharacterCollectionViewCell
         guard let cell = cell else {
             return
         }

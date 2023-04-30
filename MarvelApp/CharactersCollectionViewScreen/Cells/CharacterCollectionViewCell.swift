@@ -1,7 +1,7 @@
 import UIKit
 import CollectionViewPagingLayout
 
-final class HeroCollectionViewCell: UICollectionViewCell {
+final class CharacterCollectionViewCell: UICollectionViewCell {
     
     struct Model {
         var name: String
@@ -91,7 +91,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     
 }
 
-extension HeroCollectionViewCell: ScaleTransformView {
+extension CharacterCollectionViewCell: ScaleTransformView {
     var scaleOptions: ScaleTransformViewOptions {
         .layout(.linear)
     }

@@ -1,7 +1,7 @@
 import Alamofire
 import RealmSwift
 
-final class HeroListViewModel {
+final class CharactersCollectionViewModel {
     private let base_url = "https://gateway.marvel.com"
     private let heroes_endpoint = "/v1/public/characters"
     private var offset = 0
@@ -89,9 +89,9 @@ final class HeroListViewModel {
         }
     }
 
-    func fetchHeroes(compleation: @escaping ([HeroData], Int) -> Void, failed: @escaping () -> Void ) {
+    func fetchHeroes(compleation: @escaping ([CharactersCollectionViewController.Model], Int) -> Void, failed: @escaping () -> Void ) {
         let authParams = ["ts": "123", "apikey": "42597bee717ef2847e9b63553f4aff0f", "hash": "f49ba2754d66300142cf36b108860d2c", "offset": offset] as [String : Any]
-        var heroesData: [HeroData] = []
+        var heroesData: [CharactersCollectionViewController.Model] = []
         AF.request(base_url + heroes_endpoint, method: .get, parameters: authParams)
         .responseDecodable(of: CharacterDataWrapper.self) { response in
             switch response.result {
@@ -104,7 +104,7 @@ final class HeroListViewModel {
                     return
                 }
                 for character in results {
-                    heroesData.append(HeroData(name: character.name, description: character.description, imageURL: character.thumbnail.path + "." + character.thumbnail.ext))
+                    heroesData.append(CharactersCollectionViewController.Model(name: character.name, description: character.description, imageURL: character.thumbnail.path + "." + character.thumbnail.ext))
                 }
                 compleation(heroesData, self.offset)
                 self.offset += heroesData.count

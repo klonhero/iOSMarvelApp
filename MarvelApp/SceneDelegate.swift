@@ -9,7 +9,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let startController = HeroListViewController()
+        let startController = CharactersCollectionViewController()
         let navigationController = UINavigationController(rootViewController: startController)
         navigationController.navigationBar.backgroundColor = .clear
         window?.rootViewController = navigationController
