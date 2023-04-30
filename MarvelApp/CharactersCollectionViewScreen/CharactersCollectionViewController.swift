@@ -1,7 +1,13 @@
 import UIKit
 import CollectionViewPagingLayout
 
+
 final class CharactersCollectionViewController: UIViewController {
+    
+    enum State {
+        case loading
+        case loaded([Model])
+    }
     
     struct Model {
         let name: String
@@ -11,11 +17,17 @@ final class CharactersCollectionViewController: UIViewController {
     
     private var lastCenterIndexPath: IndexPath? = nil
     
-    private let viewModel = CharactersCollectionViewModel()
+    private var viewModel: CharactersCollectionViewModel
     
-    private var heroesData = [Model]()
+    private var heroesData: [Model] = []
     
-    private var isLoadingMore = false
+    required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+    }
+    init(viewModel: CharactersCollectionViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
     
     private let activityIndicatorView: ActivityIndicatorView = {
         let activityIndicatorView = ActivityIndicatorView()
@@ -73,20 +85,16 @@ final class CharactersCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "BackgroundColor")
-        activityIndicatorView.start()
-        isLoadingMore = true
-        viewModel.fetchHeroes(
-            compleation: { [weak self] newHeroesData, offset in
-                self?.isLoadingMore = false
-                self?.heroesData.append(contentsOf: newHeroesData)
+        viewModel.onChangeViewState = {[weak self] state in
+            switch state {
+            case .loading:
+                self?.activityIndicatorView.start()
+            case .loaded(_):
                 self?.collectionView.reloadData()
-                self?.collectionViewLayout.setCurrentPage(offset)
                 self?.activityIndicatorView.stop()
-            },
-            failed: {
-                print("failed to fetch data")
             }
-        )
+        }
+        viewModel.start()
         setupViewLayout()
     }
 
@@ -150,21 +158,22 @@ final class CharactersCollectionViewController: UIViewController {
 
 extension CharactersCollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        heroesData.count
+        return viewModel.getCharacters().count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: CharacterCollectionViewCell.self), for: indexPath) as? CharacterCollectionViewCell else {
-            return CharacterCollectionViewCell()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: CharacterCollectionViewCell.self), for: indexPath)
+        guard let cell = cell as? CharacterCollectionViewCell else {
+            return cell
         }
-        let hero = heroesData[indexPath.item]
+        let hero = viewModel.getCharacters()[indexPath.item]
         cell.setupCell(model: CharacterCollectionViewCell.Model(name: hero.name, url: URL(string: hero.imageURL)))
         return cell
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let hero = heroesData[indexPath.item]
+        let hero = viewModel.getCharacters()[indexPath.item]
         let model = DescriptionViewController.Model(url: URL(string: hero.imageURL), name: hero.name, description: hero.description)
         descriptionViewController.setup(model)
         navigationController?.pushViewController(descriptionViewController, animated: true)
@@ -186,19 +195,8 @@ extension CharactersCollectionViewController: UICollectionViewDataSource, UIColl
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (scrollView.contentOffset.x - scrollView.contentSize.width) > CGFloat(-420) && !isLoadingMore {
-            isLoadingMore = true
-            viewModel.fetchHeroes(
-                compleation: { [weak self] newHeroesData, offset in
-                    self?.heroesData.append(contentsOf: newHeroesData)
-                    self?.collectionView.reloadData()
-                    self?.collectionViewLayout.setCurrentPage(offset - 1)
-                    self?.isLoadingMore = false
-                },
-                failed: { [weak self] in
-                    self?.isLoadingMore = false
-                }
-            )
+        if (scrollView.contentOffset.x - scrollView.contentSize.width) > CGFloat(-420) {
+            viewModel.onPullToRefresh()
         }
     }
 

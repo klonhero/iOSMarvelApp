@@ -5,7 +5,6 @@ final class LoadingActivityCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-    
     }
     
     required init?(coder: NSCoder) {
