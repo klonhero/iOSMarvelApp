@@ -12,9 +12,11 @@ final class CharactersRepositoryImpl: CharactersRepository {
     init(){
         self.db = DataBaseManagerImpl()
     }
-    
+    private var isLoading: Bool = false
     func fetchCharacters(offset: Int, closure: @escaping (Result<[CharactersCollectionViewController.Model], Error>) -> Void) {
-        
+        guard !isLoading else {
+            return
+        }
         let authParams = [
             "ts": "123",
             "apikey": "42597bee717ef2847e9b63553f4aff0f",
@@ -24,9 +26,9 @@ final class CharactersRepositoryImpl: CharactersRepository {
         ] as [String : Any]
         
         var result: [CharactersCollectionViewController.Model] = []
-        
+        isLoading = true
         AF.request("https://gateway.marvel.com/v1/public/characters", method: .get, parameters: authParams)
-        .responseDecodable(of: CharacterDataWrapper.self) { response in
+            .responseDecodable(of: CharacterDataWrapper.self) {[weak self] response in
             switch response.result {
             case .success(_): {
                 guard
@@ -45,12 +47,15 @@ final class CharactersRepositoryImpl: CharactersRepository {
                         name: name, description: description,
                         imageURL: imageURL
                     ))
-                    self.db.saveCharacter(CharacterModel(id: id, name: name, imageUrl: imageURL, description: description))
+                    self?.db.saveCharacter(CharacterModel(id: id, name: name, imageUrl: imageURL, description: description))
                 }
                 closure(.success(result))
+                self?.isLoading = false
             }()
             case let .failure(error):
-                let characters = self.db.getCharacters()
+                guard let characters = self?.db.getCharacters() else {
+                    return
+                }
                 if characters.isEmpty || offset != 0 {
                     closure(.failure(error))
                     print("Fuck")
@@ -63,6 +68,7 @@ final class CharactersRepositoryImpl: CharactersRepository {
                     result.append(CharactersCollectionViewController.Model(name: name, description: description, imageURL: imageURL))
                 }
                 closure(.failure(MyCustomError.offlineData(result)))
+                self?.isLoading = false
             }
         }
     }

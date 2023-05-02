@@ -1,6 +1,6 @@
 import UIKit
 import CollectionViewPagingLayout
-
+import Kingfisher
 
 final class CharactersCollectionViewController: UIViewController {
     
@@ -204,5 +204,23 @@ extension CharactersCollectionViewController: UICollectionViewDataSource, UIColl
         let center = self.view.convert(self.collectionView.center, to: self.collectionView)
         let index = collectionView.indexPathForItem(at: center)
         return index
+    }
+    
+    private func changeTriangleColor(character: Model) {
+        guard let url: URL = URL(string: character.imageURL) else {
+            return
+        }
+        
+        let imageResource = ImageResource(downloadURL: url)
+        
+        KingfisherManager.shared.retrieveImage(with: imageResource, options: nil, progressBlock: nil, completionHandler: {
+            result in
+            switch result {
+            case .success(let result):
+                self.triangleView.color = result.image.averageColor
+            case .failure(_):
+                self.triangleView.color = .clear
+            }
+        })
     }
 }
