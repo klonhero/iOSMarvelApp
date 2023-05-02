@@ -7,6 +7,7 @@ final class CharactersCollectionViewController: UIViewController {
     enum State {
         case loading
         case loaded([Model])
+        case connectionError
     }
     
     struct Model {
@@ -14,9 +15,7 @@ final class CharactersCollectionViewController: UIViewController {
         let description: String
         let imageURL: String
     }
-    
-    private var lastCenterIndexPath: IndexPath? = nil
-    
+
     private var viewModel: CharactersCollectionViewModel
     
     private var heroesData: [Model] = []
@@ -37,12 +36,23 @@ final class CharactersCollectionViewController: UIViewController {
         return activityIndicatorView
     }()
     
+    private let connectionErrorLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "No connection, try again later"
+        label.textColor = .white
+        label.textAlignment = .center
+        label.alpha = 0
+        return label
+    }()
+    
     private let triangleView: TriangleView = {
         let pathView = TriangleView()
         pathView.translatesAutoresizingMaskIntoConstraints = false
         pathView.backgroundColor = .clear
         return pathView
     }()
+    
 
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -56,6 +66,7 @@ final class CharactersCollectionViewController: UIViewController {
     
     private let collectionViewLayout: CollectionViewPagingLayout = {
         let layout = CollectionViewPagingLayout()
+        layout.setCurrentPage(0)
         return layout
     }()
     
@@ -88,10 +99,17 @@ final class CharactersCollectionViewController: UIViewController {
         viewModel.onChangeViewState = {[weak self] state in
             switch state {
             case .loading:
+                UIView.animate(withDuration: 0.5) { [weak self] in
+                    self?.connectionErrorLabel.alpha = 0
+                }
                 self?.activityIndicatorView.start()
             case .loaded(_):
                 self?.collectionView.reloadData()
                 self?.activityIndicatorView.stop()
+            case .connectionError:
+                UIView.animate(withDuration: 0.5) { [weak self] in
+                    self?.connectionErrorLabel.alpha = 1
+                }
             }
         }
         viewModel.start()
@@ -103,14 +121,25 @@ final class CharactersCollectionViewController: UIViewController {
         view.addSubview(logoImageView)
         view.addSubview(label)
         view.addSubview(collectionView)
+        view.addSubview(connectionErrorLabel)
         view.addSubview(activityIndicatorView)
         setupTriangle()
         setupMarvelLogo()
         setupLabel()
         setupHeroesCollection()
         setupLoadingView()
+        setupConnectionLabel()
     }
 
+    private func setupConnectionLabel() {
+        NSLayoutConstraint.activate([
+            connectionErrorLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
+            connectionErrorLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+            connectionErrorLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            connectionErrorLabel.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
     private func setupTriangle() {
         NSLayoutConstraint.activate([
             triangleView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -180,37 +209,28 @@ extension CharactersCollectionViewController: UICollectionViewDataSource, UIColl
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        guard findCenterIndexPath() == lastCenterIndexPath else {
-            return
-        }
-        lastCenterIndexPath = findCenterIndexPath()
-        guard let lastCenterIndex = lastCenterIndexPath else {
-            return
-        }
-        let cell = collectionView.cellForItem(at: lastCenterIndex) as? CharacterCollectionViewCell
-        guard let cell = cell else {
-            return
-        }
-        triangleView.color = cell.imageAverageColor
+        guard scrollView == collectionView else { return }
+        let index = findCenterIndex()
+        guard let index = index else { return }
+        changeTriangleColor(character: viewModel.getCharacters()[index.item])
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (scrollView.contentOffset.x - scrollView.contentSize.width) > CGFloat(-420) {
+        if (scrollView.contentOffset.x - scrollView.contentSize.width) > CGFloat(-350) {
             viewModel.onPullToRefresh()
+            collectionViewLayout.setCurrentPage(viewModel.getCharacters().count)
         }
     }
 
-    private func findCenterIndexPath() -> IndexPath? {
+    private func findCenterIndex() -> IndexPath? {
         let center = self.view.convert(self.collectionView.center, to: self.collectionView)
         let index = collectionView.indexPathForItem(at: center)
         return index
     }
-    
     private func changeTriangleColor(character: Model) {
         guard let url: URL = URL(string: character.imageURL) else {
             return
         }
-        
         let imageResource = ImageResource(downloadURL: url)
         
         KingfisherManager.shared.retrieveImage(with: imageResource, options: nil, progressBlock: nil, completionHandler: {

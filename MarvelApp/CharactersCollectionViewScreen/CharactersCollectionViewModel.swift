@@ -49,7 +49,7 @@ final class CharactersCollectionViewModelImpl: CharactersCollectionViewModel{
                     self.onChangeViewState?(.loaded(self.characters))
                 }
             case .failure(_):
-                break
+                self.onChangeViewState?(.connectionError)
             }
         }
     }
