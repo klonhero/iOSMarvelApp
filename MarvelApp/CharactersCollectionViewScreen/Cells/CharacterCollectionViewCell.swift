@@ -8,7 +8,7 @@ final class CharacterCollectionViewCell: UICollectionViewCell {
         var url: URL?
     }
     
-    func setupCell(model: Model) {
+    func setup(with model: Model) {
         heroImageView.fetch(from: model.url)
         imageAverageColor = heroImageView.image?.averageColor?.lighter(by: 30)
         label.text = model.name

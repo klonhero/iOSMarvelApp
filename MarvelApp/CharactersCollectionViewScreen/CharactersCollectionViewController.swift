@@ -6,25 +6,19 @@ final class CharactersCollectionViewController: UIViewController {
     
     enum State {
         case loading
-        case loaded([Model])
+        case loaded
         case connectionError
+        case showDescriptionScreen(Model)
+        case changeTriangleColor(Model)
     }
     
     struct Model {
         let name: String
-        let description: String
         let imageURL: String
     }
 
     private var viewModel: CharactersCollectionViewModel
     
-    required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-    }
-    init(viewModel: CharactersCollectionViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
     
     private let activityIndicatorView: ActivityIndicatorView = {
         let activityIndicatorView = ActivityIndicatorView()
@@ -64,7 +58,7 @@ final class CharactersCollectionViewController: UIViewController {
     
     private let collectionViewLayout: CollectionViewPagingLayout = {
         let layout = CollectionViewPagingLayout()
-        layout.setCurrentPage(0)
+        layout.finalizeCollectionViewUpdates()
         return layout
     }()
     
@@ -90,7 +84,17 @@ final class CharactersCollectionViewController: UIViewController {
         label.backgroundColor = .clear
         return label
     }()
+    
+    
+    init(viewModel: CharactersCollectionViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
 
+    required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "BackgroundColor")
@@ -101,13 +105,26 @@ final class CharactersCollectionViewController: UIViewController {
                     self?.connectionErrorLabel.alpha = 0
                 }
                 self?.activityIndicatorView.start()
-            case .loaded(_):
+                
+            case .loaded:
                 self?.collectionView.reloadData()
                 self?.activityIndicatorView.stop()
+                
             case .connectionError:
                 UIView.animate(withDuration: 0.5) { [weak self] in
                     self?.connectionErrorLabel.alpha = 1
                 }
+                
+            case .changeTriangleColor(let character):
+                self?.changeTriangleColor(character: character)
+                
+            case .showDescriptionScreen(let character):
+                guard let descriptionViewController = self?.descriptionViewController else {
+                    return
+                }
+                let model = DescriptionViewController.Model(url: URL(string: character.imageURL), name: character.name, description: character.description)
+                descriptionViewController.setup(model)
+                self?.navigationController?.pushViewController(descriptionViewController, animated: true)
             }
         }
         viewModel.start()
@@ -184,8 +201,10 @@ final class CharactersCollectionViewController: UIViewController {
 }
 
 extension CharactersCollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.getCharacters().count
+        return viewModel.charactersCount()
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -193,30 +212,27 @@ extension CharactersCollectionViewController: UICollectionViewDataSource, UIColl
         guard let cell = cell as? CharacterCollectionViewCell else {
             return cell
         }
-        let hero = viewModel.getCharacters()[indexPath.item]
-        cell.setupCell(model: CharacterCollectionViewCell.Model(name: hero.name, url: URL(string: hero.imageURL)))
+        let character = viewModel.onCellDeque(at: indexPath.item)
+        cell.setup(with: CharacterCollectionViewCell.Model(name: character.name, url: URL(string: character.imageURL)))
+        
         return cell
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let hero = viewModel.getCharacters()[indexPath.item]
-        let model = DescriptionViewController.Model(url: URL(string: hero.imageURL), name: hero.name, description: hero.description)
-        descriptionViewController.setup(model)
-        navigationController?.pushViewController(descriptionViewController, animated: true)
+        viewModel.onCharacterCellTapped(at: indexPath.item)
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         guard scrollView == collectionView else { return }
         let index = findCenterIndex()
         guard let index = index else { return }
-        changeTriangleColor(character: viewModel.getCharacters()[index.item])
+        viewModel.onDeceleratingEnd(at: index.item)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if (scrollView.contentOffset.x - scrollView.contentSize.width) > CGFloat(-350) {
             viewModel.onPullToRefresh()
-            collectionViewLayout.setCurrentPage(viewModel.getCharacters().count)
         }
     }
 
@@ -225,6 +241,7 @@ extension CharactersCollectionViewController: UICollectionViewDataSource, UIColl
         let index = collectionView.indexPathForItem(at: center)
         return index
     }
+    
     private func changeTriangleColor(character: Model) {
         guard let url: URL = URL(string: character.imageURL) else {
             return

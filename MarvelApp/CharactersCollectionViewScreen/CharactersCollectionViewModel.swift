@@ -4,24 +4,15 @@ import RealmSwift
 protocol CharactersCollectionViewModel: AnyObject {
     var onChangeViewState: ((CharactersCollectionViewController.State) -> Void)? { get set }
     func start()
-    func getCharacters() -> [CharactersCollectionViewController.Model]
     func onPullToRefresh()
+    func onCellDeque(at index: Int) -> CharactersCollectionViewController.Model
+    func onCharacterCellTapped(at index: Int)
+    func onChangingTriangleColor(at index: Int) -> CharactersCollectionViewController.Model
+    func onDeceleratingEnd(at index: Int)
+    func charactersCount() -> Int
 }
 
 final class CharactersCollectionViewModelImpl: CharactersCollectionViewModel{
-    var onChangeViewState: ((CharactersCollectionViewController.State) -> Void)?
-    
-    func start() {
-        fetchCharacters()
-    }
-    
-    func getCharacters() -> [CharactersCollectionViewController.Model] {
-        self.characters
-    }
-    
-    func onPullToRefresh() {
-        fetchCharacters()
-    }
     
     private var characters: [CharactersCollectionViewController.Model]
     private var repository: CharactersRepository
@@ -32,6 +23,35 @@ final class CharactersCollectionViewModelImpl: CharactersCollectionViewModel{
         self.characters = []
         self.offset = 0
     }
+    
+    var onChangeViewState: ((CharactersCollectionViewController.State) -> Void)?
+    
+    func start() {
+        fetchCharacters()
+    }
+    
+    func onPullToRefresh() {
+        fetchCharacters()
+    }
+    
+    func onCellDeque(at index: Int) -> CharactersCollectionViewController.Model {
+        return characters[index]
+    }
+    
+    func onCharacterCellTapped(at index: Int){
+        onChangeViewState?(.showDescriptionScreen(characters[index]))
+    }
+    
+    func onChangingTriangleColor(at index: Int) -> CharactersCollectionViewController.Model {
+        return characters[index]
+    }
+    func onDeceleratingEnd(at index: Int) {
+        onChangeViewState?(.changeTriangleColor(characters[index]))
+    }
+    func charactersCount() -> Int {
+        return characters.count
+    }
+    
     private func fetchCharacters() {
         onChangeViewState?(.loading)
         repository.fetchCharacters(offset: offset) { [weak self] result in
@@ -40,13 +60,13 @@ final class CharactersCollectionViewModelImpl: CharactersCollectionViewModel{
             case .success(let moreCharacters):
                 self.characters += moreCharacters
                 self.offset += moreCharacters.count
-                self.onChangeViewState?(.loaded(self.characters))
+                self.onChangeViewState?(.loaded)
                 print(self.characters.count)
             case .failure(let error as CharactersRepositoryImpl.MyCustomError):
                 switch error {
                 case .offlineData(let savedCharacters):
                     self.characters += savedCharacters
-                    self.onChangeViewState?(.loaded(self.characters))
+                    self.onChangeViewState?(.loaded)
                 }
             case .failure(_):
                 self.onChangeViewState?(.connectionError)
