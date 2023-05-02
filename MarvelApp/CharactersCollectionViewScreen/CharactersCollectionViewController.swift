@@ -18,8 +18,6 @@ final class CharactersCollectionViewController: UIViewController {
 
     private var viewModel: CharactersCollectionViewModel
     
-    private var heroesData: [Model] = []
-    
     required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
     }
@@ -123,15 +121,15 @@ final class CharactersCollectionViewController: UIViewController {
         view.addSubview(collectionView)
         view.addSubview(connectionErrorLabel)
         view.addSubview(activityIndicatorView)
-        setupTriangle()
-        setupMarvelLogo()
-        setupLabel()
-        setupHeroesCollection()
-        setupLoadingView()
-        setupConnectionLabel()
+        setupConstraintsTriangle()
+        setupConstraintsMarvelLogo()
+        setupConstraintsLabel()
+        setupConstraintsHeroesCollection()
+        setupConstraintsLoadingView()
+        setupConstraintsConnectionLabel()
     }
 
-    private func setupConnectionLabel() {
+    private func setupConstraintsConnectionLabel() {
         NSLayoutConstraint.activate([
             connectionErrorLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             connectionErrorLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
@@ -140,7 +138,7 @@ final class CharactersCollectionViewController: UIViewController {
         ])
     }
     
-    private func setupTriangle() {
+    private func setupConstraintsTriangle() {
         NSLayoutConstraint.activate([
             triangleView.topAnchor.constraint(equalTo: view.topAnchor),
             triangleView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -149,7 +147,7 @@ final class CharactersCollectionViewController: UIViewController {
         ])
     }
 
-    private func setupMarvelLogo() {
+    private func setupConstraintsMarvelLogo() {
         NSLayoutConstraint.activate([
             logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             logoImageView.heightAnchor.constraint(equalToConstant: 25),
@@ -158,7 +156,7 @@ final class CharactersCollectionViewController: UIViewController {
         ])
     }
 
-    private func setupLabel() {
+    private func setupConstraintsLabel() {
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 20),
             label.heightAnchor.constraint(equalToConstant: 75),
@@ -167,7 +165,7 @@ final class CharactersCollectionViewController: UIViewController {
         ])
     }
     
-    private func setupHeroesCollection() {
+    private func setupConstraintsHeroesCollection() {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: label.bottomAnchor),
             collectionView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
@@ -175,7 +173,7 @@ final class CharactersCollectionViewController: UIViewController {
         ])
     }
     
-    private func setupLoadingView() {
+    private func setupConstraintsLoadingView() {
         NSLayoutConstraint.activate([
             activityIndicatorView.topAnchor.constraint(equalTo: view.topAnchor),
             activityIndicatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
