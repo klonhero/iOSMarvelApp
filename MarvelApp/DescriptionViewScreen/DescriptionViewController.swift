@@ -2,11 +2,16 @@ import UIKit
 
 final class DescriptionViewController: UIViewController {
     
+    enum State {
+        case loaded(Model)
+    }
+    
     struct Model {
         let url: URL?
         let name: String
         let description: String
     }
+    let viewModel = DescriptionViewModelImpl()
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -41,7 +46,6 @@ final class DescriptionViewController: UIViewController {
         return textView
     }()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -50,23 +54,30 @@ final class DescriptionViewController: UIViewController {
         view.addSubview(nameLabel)
         view.addSubview(descriptionTextView)
     
-        setupImageView()
-        setupNameLabel()
-        setupDescriptionLabel()
-        setupGradientView()
+        setupConstraintsImageView()
+        setupConstraintsNameLabel()
+        setupConstraintsDescriptionLabel()
+        setupConstraintsGradientView()
+        
+        viewModel.onChangeViewState = {[weak self] state in
+            switch state {
+            case .loaded(let character):
+                self?.setup(character)
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    func setup(_ model: Model) {
+    private func setup(_ model: Model) {
         nameLabel.text = model.name
         descriptionTextView.text = model.description
         imageView.fetch(from: model.url)
     }
     
-    private func setupImageView() {
+    private func setupConstraintsImageView() {
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: view.topAnchor),
             imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -75,7 +86,7 @@ final class DescriptionViewController: UIViewController {
         ])
     }
     
-    private func setupNameLabel() {
+    private func setupConstraintsNameLabel() {
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
             nameLabel.leftAnchor.constraint(equalTo: view.leftAnchor),
@@ -83,7 +94,7 @@ final class DescriptionViewController: UIViewController {
         ])
     }
     
-    private func setupDescriptionLabel() {
+    private func setupConstraintsDescriptionLabel() {
         NSLayoutConstraint.activate([
             descriptionTextView.topAnchor.constraint(equalTo: nameLabel.safeAreaLayoutGuide.bottomAnchor, constant: 10),
             descriptionTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -92,7 +103,7 @@ final class DescriptionViewController: UIViewController {
         ])
     }
     
-    private func setupGradientView() {
+    private func setupConstraintsGradientView() {
         NSLayoutConstraint.activate([
             gradientView.topAnchor.constraint(equalTo: view.topAnchor),
             gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor),

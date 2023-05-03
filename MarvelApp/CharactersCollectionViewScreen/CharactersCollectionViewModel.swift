@@ -64,10 +64,14 @@ final class CharactersCollectionViewModelImpl: CharactersCollectionViewModel{
                 print(self.characters.count)
             case .failure(let error as CharactersRepositoryImpl.MyCustomError):
                 switch error {
-                case .offlineData(let savedCharacters):
+                case .offlineCharacters(let savedCharacters):
                     self.characters += savedCharacters
                     self.onChangeViewState?(.loaded)
+
+                case .offlineCharacter(_):
+                    break
                 }
+        
             case .failure(_):
                 self.onChangeViewState?(.connectionError)
             }

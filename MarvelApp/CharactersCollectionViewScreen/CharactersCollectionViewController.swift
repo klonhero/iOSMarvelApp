@@ -11,14 +11,14 @@ final class CharactersCollectionViewController: UIViewController {
         case showDescriptionScreen(Model)
         case changeTriangleColor(Model)
     }
-    
+
     struct Model {
+        let id: Int
         let name: String
         let imageURL: String
     }
 
     private var viewModel: CharactersCollectionViewModel
-    
     
     private let activityIndicatorView: ActivityIndicatorView = {
         let activityIndicatorView = ActivityIndicatorView()
@@ -122,8 +122,7 @@ final class CharactersCollectionViewController: UIViewController {
                 guard let descriptionViewController = self?.descriptionViewController else {
                     return
                 }
-                let model = DescriptionViewController.Model(url: URL(string: character.imageURL), name: character.name, description: character.description)
-                descriptionViewController.setup(model)
+                descriptionViewController.viewModel.start(with: character.id)
                 self?.navigationController?.pushViewController(descriptionViewController, animated: true)
             }
         }

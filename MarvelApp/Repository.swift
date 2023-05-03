@@ -8,73 +8,118 @@ final class CharactersRepositoryImpl: CharactersRepository {
 
     private let db: DataBaseManagerImpl
 
-    
     init(){
         self.db = DataBaseManagerImpl()
     }
     private var isLoading: Bool = false
-    func fetchCharacters(offset: Int, closure: @escaping (Result<[CharactersCollectionViewController.Model], Error>) -> Void) {
-        guard !isLoading else {
-            return
-        }
-        let authParams = [
-            "ts": "123",
-            "apikey": "42597bee717ef2847e9b63553f4aff0f",
-            "hash": "f49ba2754d66300142cf36b108860d2c",
-            "offset": offset,
-            "limit": 10
-        ] as [String : Any]
-        
-        var result: [CharactersCollectionViewController.Model] = []
-        isLoading = true
-        AF.request("https://gateway.marvel.com/v1/public/characters", method: .get, parameters: authParams)
-            .responseDecodable(of: CharacterDataWrapper.self) {[weak self] response in
-            switch response.result {
-            case .success(_): {
-                guard
-                    let dataWrapper = response.value,
-                    let data = dataWrapper.data,
-                    let results = data.results
-                else {
-                    return
+    
+        func fetchCharacters(offset: Int, closure: @escaping (Result<[CharactersCollectionViewController.Model], Error>) -> Void) {
+            guard !isLoading else {
+                return
+            }
+            let authParams = [
+                "ts": "123",
+                "apikey": "42597bee717ef2847e9b63553f4aff0f",
+                "hash": "f49ba2754d66300142cf36b108860d2c",
+                "offset": offset,
+                "limit": 10
+            ] as [String : Any]
+            
+            var result: [CharactersCollectionViewController.Model] = []
+            isLoading = true
+            AF.request("https://gateway.marvel.com/v1/public/characters", method: .get, parameters: authParams)
+                .responseDecodable(of: CharacterDataWrapper.self) {[weak self] response in
+                switch response.result {
+                case .success(_):
+                    guard
+                        let dataWrapper = response.value,
+                        let data = dataWrapper.data,
+                        let results = data.results
+                    else {
+                        return
+                    }
+                    for character in results {
+                        let id = character.id
+                        let name = character.name
+                        let description = character.description
+                        let imageURL = character.thumbnail.path + "." + character.thumbnail.ext
+                        result.append(CharactersCollectionViewController.Model(
+                            id: id, name: name,
+                            imageURL: imageURL
+                        ))
+                        self?.db.saveCharacter(CharacterModel(id: id, name: name, imageUrl: imageURL, description: description))
+                    }
+                    closure(.success(result))
+                    self?.isLoading = false
+                case let .failure(error):
+                    guard let characters = self?.db.getCharacters() else {
+                        return
+                    }
+                    if characters.isEmpty || offset != 0 {
+                        closure(.failure(error))
+                        print("Fuck")
+                        return
+                    }
+                    for character in characters {
+                        let id = character.id
+                        let name = character.name
+                        let imageURL = character.imageUrl
+                        result.append(CharactersCollectionViewController.Model(id: id, name: name, imageURL: imageURL))
+                    }
+                    closure(.failure(MyCustomError.offlineCharacters(result)))
+                    self?.isLoading = false
                 }
-                for character in results {
-                    let id = character.id
-                    let name = character.name
-                    let description = character.description
-                    let imageURL = character.thumbnail.path + "." + character.thumbnail.ext
-                    result.append(CharactersCollectionViewController.Model(
-                        name: name, description: description,
-                        imageURL: imageURL
-                    ))
-                    self?.db.saveCharacter(CharacterModel(id: id, name: name, imageUrl: imageURL, description: description))
-                }
-                closure(.success(result))
-                self?.isLoading = false
-            }()
-            case let .failure(error):
-                guard let characters = self?.db.getCharacters() else {
-                    return
-                }
-                if characters.isEmpty || offset != 0 {
-                    closure(.failure(error))
-                    print("Fuck")
-                    return
-                }
-                for character in characters {
-                    let name = character.name
-                    let description = character.descriptions
-                    let imageURL = character.imageUrl
-                    result.append(CharactersCollectionViewController.Model(name: name, description: description, imageURL: imageURL))
-                }
-                closure(.failure(MyCustomError.offlineData(result)))
-                self?.isLoading = false
             }
         }
-    }
-    
+            
+        func fetchCharacter(by id: Int, closure: @escaping (Result<DescriptionViewController.Model?, Error>) -> Void) {
+            guard !isLoading else {
+                return
+            }
+            let authParams = [
+                "ts": "123",
+                "apikey": "42597bee717ef2847e9b63553f4aff0f",
+                "hash": "f49ba2754d66300142cf36b108860d2c"
+            ] as [String : Any]
+            
+            var result: DescriptionViewController.Model? = nil
+            isLoading = true
+            AF.request("https://gateway.marvel.com/v1/public/characters/" + String(id), method: .get, parameters: authParams)
+                .responseDecodable(of: CharacterDataWrapper.self) {[weak self] response in
+                switch response.result {
+                case .success(_):
+                    guard
+                        let dataWrapper = response.value,
+                        let data = dataWrapper.data,
+                        let results = data.results
+                    else {
+                        return
+                    }
+                    for character in results {
+                        let name = character.name
+                        let description = character.description
+                        let imageURL = character.thumbnail.path + "." + character.thumbnail.ext
+                        result = DescriptionViewController.Model(
+                            url: URL(string: imageURL), name: name,
+                            description: description
+                        )
+                    }
+                    closure(.success(result))
+                    self?.isLoading = false
+                case .failure(_):
+                    guard let character = self?.db.getCharacter(by: id) else {
+                        return
+                    }
+                    result = DescriptionViewController.Model(url: URL(string: character.imageUrl), name: character.name, description: character.description)
+                    closure(.failure(MyCustomError.offlineCharacter(result)))
+                    self?.isLoading = false
+                }
+            }
+        }
+            
     enum MyCustomError: Error {
-        case offlineData([CharactersCollectionViewController.Model])
+        case offlineCharacters([CharactersCollectionViewController.Model])
+        case offlineCharacter(DescriptionViewController.Model?)
     }
     
     private struct CharacterDataWrapper: Decodable {
