@@ -1,14 +1,14 @@
 import UIKit
 import CollectionViewPagingLayout
 
-final class HeroCollectionViewCell: UICollectionViewCell {
+final class CharacterCollectionViewCell: UICollectionViewCell {
     
     struct Model {
         var name: String
         var url: URL?
     }
     
-    func setupCell(model: Model) {
+    func setup(with model: Model) {
         heroImageView.fetch(from: model.url)
         imageAverageColor = heroImageView.image?.averageColor?.lighter(by: 30)
         label.text = model.name
@@ -91,7 +91,7 @@ final class HeroCollectionViewCell: UICollectionViewCell {
     
 }
 
-extension HeroCollectionViewCell: ScaleTransformView {
+extension CharacterCollectionViewCell: ScaleTransformView {
     var scaleOptions: ScaleTransformViewOptions {
         .layout(.linear)
     }
